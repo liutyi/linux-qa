@@ -77,38 +77,31 @@ def row(msg,info):
     print shortrow + str(info)
 
 def countuptime():
- 
-     try:
-         f = open( "/proc/uptime" )
-         contents = f.read().split()
-         f.close()
-     except:
+    try:
+      f = open( "/proc/uptime" )
+      contents = f.read().split()
+      f.close()
+    except:
         return "Cannot open uptime file: /proc/uptime"
+    total_seconds = float(contents[0])
+    # Helper vars:
+    MINUTE = 60; HOUR = MINUTE * 60; DAY = HOUR * 24
+    # Get the days, hours, etc:
+    days    = int( total_seconds / DAY )
+    hours   = int( ( total_seconds % DAY ) / HOUR )
+    minutes = int( ( total_seconds % HOUR ) / MINUTE )
+    seconds = int( total_seconds % MINUTE )
+    # Build up the pretty string (like this: "N days, N hours, N minutes, N seconds")
+    string = ""
+    if days > 0:
+       string += str(days) + " " + (days == 1 and "day" or "days" )
+    else:
+      if  len(string) > 0 or hours > 0:
+         string += ", " + str(hours) + ":"
+      if len(string) > 0 or minutes > 0:
+         string += str(minutes) 
  
-     total_seconds = float(contents[0])
- 
-     # Helper vars:
-     MINUTE  = 60
-     HOUR    = MINUTE * 60
-     DAY     = HOUR * 24
- 
-     # Get the days, hours, etc:
-     days    = int( total_seconds / DAY )
-     hours   = int( ( total_seconds % DAY ) / HOUR )
-     minutes = int( ( total_seconds % HOUR ) / MINUTE )
-     seconds = int( total_seconds % MINUTE )
- 
-     # Build up the pretty string (like this: "N days, N hours, N minutes, N seconds")
-     string = ""
-     if days > 0:
-         string += str(days) + " " + (days == 1 and "day" or "days" ) + ", "
-     if len(string) > 0 or hours > 0:
-         string += str(hours) + " " + (hours == 1 and "hour" or "hours" ) + ", "
-     if len(string) > 0 or minutes > 0:
-         string += str(minutes) + " " + (minutes == 1 and "minute" or "minutes" ) + ", "
-     string += str(seconds) + " " + (seconds == 1 and "second" or "seconds" )
- 
-     return string;
+    return string;
 
 
 def main():
@@ -126,7 +119,8 @@ def main():
 	   row('NAME', hostname)
 	   now=time.strftime("%Y-%m-%d %H:%M (%Z)")
 	   row('DATE',now)
-	   uptime=countuptime()
+           loadavg=os.getloadavg()
+           uptime=countuptime() + " " + str(os.getloadavg())
 	   row('UPTIME', uptime)
 	   platf=' '.join(platform.linux_distribution())
 	   row('OS', platf)
