@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 from argparse import ArgumentParser
+from socket import gethostname;
+import platform
+import time
+import os
 
 def Options ():
    scriptName = 'LQApy Script'
@@ -63,23 +67,72 @@ def warning(msg):
 def error(msg):
     print CRITICAL + msg + DEFAULT
 
-def title (msg):
-    longtitle="=========["+msg+"]================================================="
+def title(msg):
+    longtitle="==========["+msg+"]==================================================="
     shorttitle=longtitle[0:61]
     print TITLE + shorttitle
-	
+
+def row(msg,info):
+    shortrow=msg[0:6]+':\t'
+    print shortrow + str(info)
+
+def countuptime():
+ 
+     try:
+         f = open( "/proc/uptime" )
+         contents = f.read().split()
+         f.close()
+     except:
+        return "Cannot open uptime file: /proc/uptime"
+ 
+     total_seconds = float(contents[0])
+ 
+     # Helper vars:
+     MINUTE  = 60
+     HOUR    = MINUTE * 60
+     DAY     = HOUR * 24
+ 
+     # Get the days, hours, etc:
+     days    = int( total_seconds / DAY )
+     hours   = int( ( total_seconds % DAY ) / HOUR )
+     minutes = int( ( total_seconds % HOUR ) / MINUTE )
+     seconds = int( total_seconds % MINUTE )
+ 
+     # Build up the pretty string (like this: "N days, N hours, N minutes, N seconds")
+     string = ""
+     if days > 0:
+         string += str(days) + " " + (days == 1 and "day" or "days" ) + ", "
+     if len(string) > 0 or hours > 0:
+         string += str(hours) + " " + (hours == 1 and "hour" or "hours" ) + ", "
+     if len(string) > 0 or minutes > 0:
+         string += str(minutes) + " " + (minutes == 1 and "minute" or "minutes" ) + ", "
+     string += str(seconds) + " " + (seconds == 1 and "second" or "seconds" )
+ 
+     return string;
+
+
 def main():
    args =  Options ()
    ColorScheme (args.color)
    sections=args.section
    if ( len(sections) == 0 ):
      sections = ['header', 'hw', 'net' , 'netsrv', 'security', 'agents']
-   print TITLE + "==============================================================" + DEFAULT
-   print('{:^62}'.format(version))
-   print TITLE + "==============================================================" + DEFAULT
+   print TITLE + "=============================================================" + DEFAULT
+   print('{:^61}'.format(version))
+   print TITLE + "=============================================================" + DEFAULT
    for i in range(len(sections)):
         if ( sections[i] == 'header' ):
-           print TITLE + "==============================================================" + DEFAULT            
+	   hostname=gethostname()
+	   row('NAME', hostname)
+	   now=time.strftime("%Y-%m-%d %H:%M (%Z)")
+	   row('DATE',now)
+	   uptime=countuptime()
+	   row('UPTIME', uptime)
+	   platf=' '.join(platform.linux_distribution())
+	   row('OS', platf)
+	   kernelv=platform.platform()
+	   row('KERNEL',kernelv)
+           
         if ( sections[i] == 'hw' ):
            title('HW')
 
