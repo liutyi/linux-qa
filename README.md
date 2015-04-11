@@ -12,10 +12,10 @@ hardware info, net info, net services (SMTP,NTP,SYSLOG) info, security info, all
 
 Dependencies:
 
-pip install psutil
-pip install argparse
-
 yum install python-psutil
+
 yum install python-argparse
+
+yum install dmidecode
 
 
