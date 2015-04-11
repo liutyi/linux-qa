@@ -10,5 +10,12 @@ TODO:
 
 hardware info, net info, net services (SMTP,NTP,SYSLOG) info, security info, all kind of monitoring agents status
 
+Dependencies:
+
+yum install python-psutil
+
+yum install python-argparse
+
+yum install dmidecode
 
 
