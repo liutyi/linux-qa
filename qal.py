@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 from argparse import ArgumentParser
 from socket import gethostname;
-from psutil import virtual_memory,swap_memory;
 from subprocess import check_output 
 import platform
 import time
