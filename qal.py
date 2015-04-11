@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from argparse import ArgumentParser
 from socket import gethostname;
+from psutil import virtual_memory,swap_memory;
 import platform
 import time
 import os
@@ -8,7 +9,7 @@ import os
 def Options ():
    scriptName = 'LQApy Script'
    scriptVer  = '0.1'
-   scriptBuild = '002'
+   scriptBuild = '007'
    scriptDate  = '2015-04-09'
    developedBy = 'Oleksandr Liutyi'
    scriptDesc  = 'Linux Server QA Script'
@@ -23,7 +24,8 @@ def Options ():
 			 action="store_true",\
 			 help="write errors to syslog")
    parser.add_argument('-s', '--scheme',\
-			 action='store', dest='color', choices=['grey', 'white', 'text'],\
+			 action='store', dest='color', choices=['calm', 'inverse', 'default', 'text'],\
+			 default='default',\
 			 help="Color scheme selection\r\nblack, white, text ")
    parser.add_argument("section",nargs='*',\
 			 help="optional section(s) name(s) for example: header, hw, net, netsrv, security, agents")
@@ -46,11 +48,11 @@ def ColorScheme (scheme):
    SBOLD='\033[1m'; SUNDERLINE='\033[4m'; SBLINK='\033[5m'; SINVERSE='\033[7m'; SDEF='\033[m'
    # Assign color
    global TITLE; global NEUTRAL; global CRITICAL; global WARNING; global GOOD; global TIPS; global DEFAULT
-   if ( scheme == None ):
+   if ( scheme == 'calm' ):
 	TITLE=FDEF; NEUTRAL=FWHITE; CRITICAL=FRED; WARNING=FBROWN; GOOD=FGREEN; TIPS=FLCYAN; DEFAULT=FDEF
-   if ( scheme == "white" ):
+   if ( scheme == "inverse" ):
 	TITLE=FBLACK; NEUTRAL=FDEF; CRITICAL=FRED; WARNING=FBROWN; GOOD=FGREEN; TIPS=FLCYAN; DEFAULT=FDEF
-   if ( scheme == "grey" ):
+   if ( scheme == "default" ):
 	TITLE=FWHITE; NEUTRAL=FDEF; CRITICAL=FRED; WARNING=FBROWN; GOOD=FGREEN; TIPS=FLCYAN; DEFAULT=FDEF
    if ( scheme == "text" ):
 	TITLE=""; NEUTRAL=""; CRITICAL=""; WARNING=""; GOOD=""; TIPS=""; DEFAULT=""
@@ -74,7 +76,7 @@ def title(msg):
 
 def row(msg,info):
     shortrow=msg[0:6]+':\t'
-    print shortrow + str(info)
+    print TITLE + shortrow + DEFAULT + str(info)
 
 def countuptime():
     try:
@@ -126,9 +128,12 @@ def main():
 	   row('OS', platf)
 	   kernelv=platform.platform()
 	   row('KERNEL',kernelv)
-           
         if ( sections[i] == 'hw' ):
-           title('HW')
+           title('HARDWARE')
+           mem=virtual_memory()
+           row('MEM', mem.percent)
+
+
 
 if __name__ == '__main__':
     main()
