@@ -10,7 +10,7 @@ import os
 def Options ():
    scriptName = 'LQApy Script'
    scriptVer  = '0.1'
-   scriptBuild = '008'
+   scriptBuild = '009'
    scriptDate  = '2015-04-09'
    developedBy = 'Oleksandr Liutyi'
    scriptDesc  = 'Linux Server QA Script'
@@ -99,10 +99,8 @@ def countuptime():
     if days > 0:
        string += str(days) + " " + (days == 1 and "day" or "days" )
     else:
-      if  len(string) > 0 or hours > 0:
-         string += ", " + str(hours) + ":"
-      if len(string) > 0 or minutes > 0:
-         string += str(minutes) 
+         string += str(hours).zfill(2) + ":"
+         string += str(minutes).zfill(2)
  
     return string;
 
