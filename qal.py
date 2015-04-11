@@ -2,6 +2,7 @@
 from argparse import ArgumentParser
 from socket import gethostname;
 from psutil import virtual_memory,swap_memory;
+from subprocess import check_output 
 import platform
 import time
 import os
@@ -9,7 +10,7 @@ import os
 def Options ():
    scriptName = 'LQApy Script'
    scriptVer  = '0.1'
-   scriptBuild = '007'
+   scriptBuild = '008'
    scriptDate  = '2015-04-09'
    developedBy = 'Oleksandr Liutyi'
    scriptDesc  = 'Linux Server QA Script'
@@ -105,13 +106,26 @@ def countuptime():
  
     return string;
 
+def dmidecode():
+    vendor  =check_output(["dmidecode","--string","system-manufacturer"])
+    product =check_output(["dmidecode","--string","system-product-name"])
+    serialn =check_output(["dmidecode","--string","system-serial-number"])
+    biosven =check_output(["dmidecode","--string","bios-vendor"])
+    biosver =check_output(["dmidecode","--string","bios-version"])
+    biosdate=check_output(["dmidecode","--string","bios-release-date"])
+    server = str( vendor.rstrip('\n')) + " " + str(product.rstrip('\n'))
+    bios   = str(biosven.rstrip('\n')) + " " + str(biosver.rstrip('\n')) + " (" + str(biosdate.rstrip('\n')) + ")"
+    serial = str(serialn.rstrip('\n'))
+    row('SERVER',server)
+    row('BIOS',bios)
+    row('SERIAL',serial)
 
 def main():
    args =  Options ()
    ColorScheme (args.color)
    sections=args.section
    if ( len(sections) == 0 ):
-     sections = ['header', 'hw', 'net' , 'netsrv', 'security', 'agents']
+     sections = ['header', 'hw', 'load', 'net' , 'netsrv', 'security', 'agents']
    print TITLE + "=============================================================" + DEFAULT
    print('{:^61}'.format(version))
    print TITLE + "=============================================================" + DEFAULT
@@ -130,8 +144,11 @@ def main():
 	   row('KERNEL',kernelv)
         if ( sections[i] == 'hw' ):
            title('HARDWARE')
-           mem=virtual_memory()
-           row('MEM', mem.percent)
+           dmidecode()
+#        if ( sections[i] == 'load' ):
+#           mem=virtual_memory()
+#           row('MEM', mem.percent)
+
 
 
 
