@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 from argparse import ArgumentParser
 from socket import gethostname;
-from subprocess import check_output 
 import platform
 import time
 import os
@@ -9,8 +8,8 @@ import os
 def Options ():
    scriptName = 'LQApy Script'
    scriptVer  = '0.1'
-   scriptBuild = '009'
-   scriptDate  = '2015-04-09'
+   scriptBuild = '010'
+   scriptDate  = '2015-04-13'
    developedBy = 'Oleksandr Liutyi'
    scriptDesc  = 'Linux Server QA Script'
    global version; version = scriptName+" "+scriptVer+"-"+scriptBuild+" ("+scriptDate+")"
@@ -104,12 +103,15 @@ def countuptime():
     return string;
 
 def dmidecode():
-    vendor  =check_output(["dmidecode","--string","system-manufacturer"])
-    product =check_output(["dmidecode","--string","system-product-name"])
-    serialn =check_output(["dmidecode","--string","system-serial-number"])
-    biosven =check_output(["dmidecode","--string","bios-vendor"])
-    biosver =check_output(["dmidecode","--string","bios-version"])
-    biosdate=check_output(["dmidecode","--string","bios-release-date"])
+    try:
+        f = open( "/sys/class/dmi/id/sys_vendor" ); vendor=f.read(); f.close()
+        f = open( "/sys/class/dmi/id/product_name" ); product=f.read(); f.close()
+        f = open( "/sys/class/dmi/id/product_serial" ); serialn=f.read(); f.close()
+        f = open( "/sys/class/dmi/id/bios_vendor" ); biosven=f.read(); f.close()
+        f = open( "/sys/class/dmi/id/bios_version" ); biosver=f.read(); f.close()
+        f = open( "/sys/class/dmi/id/bios_date" ); biosdate=f.read(); f.close()
+    except:
+        return "File not exist"
     server = str( vendor.rstrip('\n')) + " " + str(product.rstrip('\n'))
     bios   = str(biosven.rstrip('\n')) + " " + str(biosver.rstrip('\n')) + " (" + str(biosdate.rstrip('\n')) + ")"
     serial = str(serialn.rstrip('\n'))
@@ -142,9 +144,6 @@ def main():
         if ( sections[i] == 'hw' ):
            title('HARDWARE')
            dmidecode()
-#        if ( sections[i] == 'load' ):
-#           mem=virtual_memory()
-#           row('MEM', mem.percent)
 
 
 
