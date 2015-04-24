@@ -20,8 +20,7 @@ yum install python-argparse
 USAGE:
 
 root@wordpress-0yvs:~# linux-qa/qal.py
-    
-    
+```    
 =============================================================
               LQApy Script 0.1-010 (2015-04-13)
 =============================================================
@@ -34,6 +33,6 @@ KERNEL: Linux-3.2.0-4-amd64-x86_64-with-debian-7.8
 SERVER: Google Google
 BIOS:   Google Google (01/01/2011)
 SERIAL: GoogleCloud-78402E1B290C15E9106CA7DE44591E72
-    
+```
     
 
