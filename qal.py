@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from argparse import ArgumentParser
 from socket import gethostname;
+from collections import OrderedDict
 import platform
 import time
 import os
@@ -102,6 +103,31 @@ def countuptime():
  
     return string;
 
+def meminfo ():
+    meminfo=OrderedDict()
+    with open('/proc/meminfo') as f:
+        for line in f:
+            meminfo[line.split(':')[0]] = line.split(':')[1].strip()
+    num = int (meminfo [ 'MemTotal' ].split(' ')[0].strip())
+    for unit in ['KB','MB','GB','TB','PB','EB','ZB']:
+        if abs(num) < 1024.0:
+            memhr = "%3.1f %s" % (num, unit)
+	    break
+        num /= 1024.0
+        humanread = "%.1f %s" % (num, 'Yi')
+    row('MEM',memhr)
+    
+
+
+def cpuinfo ():
+        f = open( "/proc/cpuinfo" );
+        for line in f:
+            if line.strip():
+               if line.rstrip('\n').startswith('model name'):
+                  model_name = line.rstrip('\n').split(':')[1].strip()
+        f.close()
+	row ("CPU", model_name)
+
 def dmidecode():
     try:
         f = open( "/sys/class/dmi/id/sys_vendor" ); vendor=f.read(); f.close()
@@ -110,6 +136,8 @@ def dmidecode():
         f = open( "/sys/class/dmi/id/bios_vendor" ); biosven=f.read(); f.close()
         f = open( "/sys/class/dmi/id/bios_version" ); biosver=f.read(); f.close()
         f = open( "/sys/class/dmi/id/bios_date" ); biosdate=f.read(); f.close()
+	f = open( "/proc/meminfo" ); meminfo = dict((i.split()[0].rstrip(':'),int(i.split()[1])) for i in f.readlines()); mem_total_kib = meminfo['MemTotal']; f.close()
+	f = open( "/proc/cpuinfo" );
     except:
         return "File not exist"
     server = str( vendor.rstrip('\n')) + " " + str(product.rstrip('\n'))
@@ -144,6 +172,9 @@ def main():
         if ( sections[i] == 'hw' ):
            title('HARDWARE')
            dmidecode()
+           cpuinfo()
+           meminfo()
+
 
 
 
