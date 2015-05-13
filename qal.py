@@ -2,7 +2,7 @@
 from argparse import ArgumentParser
 from socket import gethostname;
 from collections import OrderedDict
-import psutil
+#import psutil
 import platform
 import time
 import os
@@ -131,15 +131,15 @@ def humanize (number):
 
 # Get human readable memory info
 def meminfo ():
-#    meminfo=OrderedDict()
-#    with open('/proc/meminfo') as f:
-#        for line in f:
-#            meminfo[line.split(':')[0]] = line.split(':')[1].strip()
-#    f.close()
-#    memt = int (meminfo [ 'MemTotal' ].split(' ')[0].strip())
-#    swpt = int (meminfo [ 'SwapTotal' ].split(' ')[0].strip())
+    meminfo=OrderedDict()
+    with open('/proc/meminfo') as f:
+        for line in f:
+            meminfo[line.split(':')[0]] = line.split(':')[1].strip()
+    f.close()
+    memt = int (meminfo [ 'MemTotal' ].split(' ')[0].strip())
+    swpt = int (meminfo [ 'SwapTotal' ].split(' ')[0].strip())
     swpt = psutil.swap_memory().total
-    memt = psutil.virtual_memory().total
+#    memt = psutil.virtual_memory().total
     memth = humanize (memt)
     swpth = humanize (swpt)
 
