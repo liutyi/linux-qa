@@ -6,6 +6,7 @@ import platform
 import time
 import os
 
+# Parse command line options
 def Options ():
    scriptName = 'LQApy Script'
    scriptVer  = '0.1'
@@ -32,6 +33,7 @@ def Options ():
    args = parser.parse_args()
    return args
 
+# Define color scheme
 def ColorScheme (scheme):
    # Background color definitions
    BBLACK='\033[40m'; BRED='\033[41m'; BGREEN='\033[42m'
@@ -57,27 +59,34 @@ def ColorScheme (scheme):
    if ( scheme == "text" ):
 	TITLE=""; NEUTRAL=""; CRITICAL=""; WARNING=""; GOOD=""; TIPS=""; DEFAULT=""
 
+# Print in neutral colors
 def list (msg):
     print NEUTRAL + msg + DEFAULT
 
+# Print with POSITIVE colors
 def positive(msg):
     print GOOD + msg + DEFAULT
 
+# Print in WARNING colors
 def warning(msg):
     print WARNING + msg + DEFAULT
 
+# Print in ERROR colors
 def error(msg):
     print CRITICAL + msg + DEFAULT
 
+# Print section title
 def title(msg):
     longtitle="==========["+msg+"]==================================================="
     shorttitle=longtitle[0:61]
     print TITLE + shorttitle
 
+# Add row with row TITLE: + information
 def row(msg,info):
     shortrow=msg[0:6]+':\t'
     print TITLE + shortrow + DEFAULT + str(info)
 
+# Get human readable uptime
 def countuptime():
     try:
       f = open( "/proc/uptime" )
@@ -86,14 +95,11 @@ def countuptime():
     except:
         return "Cannot open uptime file: /proc/uptime"
     total_seconds = float(contents[0])
-    # Helper vars:
     MINUTE = 60; HOUR = MINUTE * 60; DAY = HOUR * 24
-    # Get the days, hours, etc:
     days    = int( total_seconds / DAY )
     hours   = int( ( total_seconds % DAY ) / HOUR )
     minutes = int( ( total_seconds % HOUR ) / MINUTE )
     seconds = int( total_seconds % MINUTE )
-    # Build up the pretty string (like this: "N days, N hours, N minutes, N seconds")
     string = ""
     if days > 0:
        string += str(days) + " " + (days == 1 and "day" or "days" )
@@ -103,6 +109,7 @@ def countuptime():
  
     return string;
 
+# Get human readable memory info
 def meminfo ():
     meminfo=OrderedDict()
     with open('/proc/meminfo') as f:
@@ -118,16 +125,27 @@ def meminfo ():
     row('MEM',memhr)
     
 
-
+# (DRAFT) Get CPU Information
 def cpuinfo ():
+        cpucore = []; oscpucore = [] 
         f = open( "/proc/cpuinfo" );
         for line in f:
             if line.strip():
                if line.rstrip('\n').startswith('model name'):
                   model_name = line.rstrip('\n').split(':')[1].strip()
+	       if line.rstrip('\n').startswith('physical id'):
+                  coreid = line.rstrip('\n').split(':')[1].strip()
+		  if coreid not in cpucore:
+                     cpucore.append(coreid)
+	       if line.rstrip('\n').startswith('core id'):
+                  coreid = line.rstrip('\n').split(':')[1].strip()
+                  if coreid not in oscpucore:
+                     oscpucore.append(coreid)
         f.close()
+	model_name = str (len(oscpucore)) + "(" + str (len(cpucore)) + ")" + "x" + model_name
 	row ("CPU", model_name)
 
+# Get BIOS/HW information
 def dmidecode():
     try:
         f = open( "/sys/class/dmi/id/sys_vendor" ); vendor=f.read(); f.close()
@@ -136,8 +154,6 @@ def dmidecode():
         f = open( "/sys/class/dmi/id/bios_vendor" ); biosven=f.read(); f.close()
         f = open( "/sys/class/dmi/id/bios_version" ); biosver=f.read(); f.close()
         f = open( "/sys/class/dmi/id/bios_date" ); biosdate=f.read(); f.close()
-	f = open( "/proc/meminfo" ); meminfo = dict((i.split()[0].rstrip(':'),int(i.split()[1])) for i in f.readlines()); mem_total_kib = meminfo['MemTotal']; f.close()
-	f = open( "/proc/cpuinfo" );
     except:
         return "File not exist"
     server = str( vendor.rstrip('\n')) + " " + str(product.rstrip('\n'))
@@ -147,6 +163,7 @@ def dmidecode():
     row('BIOS',bios)
     row('SERIAL',serial)
 
+# MAIN part of the script
 def main():
    args =  Options ()
    ColorScheme (args.color)
@@ -157,6 +174,7 @@ def main():
    print('{:^61}'.format(version))
    print TITLE + "=============================================================" + DEFAULT
    for i in range(len(sections)):
+# HEADER
         if ( sections[i] == 'header' ):
 	   hostname=gethostname()
 	   row('NAME', hostname)
@@ -169,6 +187,7 @@ def main():
 	   row('OS', platf)
 	   kernelv=platform.platform()
 	   row('KERNEL',kernelv)
+# HARDWARE
         if ( sections[i] == 'hw' ):
            title('HARDWARE')
            dmidecode()
