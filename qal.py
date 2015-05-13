@@ -109,23 +109,31 @@ def countuptime():
  
     return string;
 
+# Memory, Swap, Disk sizes in human readable formats
+def humanize (number):
+    for unit in ['KB','MB','GB','TB','PB','EB','ZB']:
+        if abs(number) < 1024.0:
+            humanrnum = "%3.1f %s" % (number, unit)
+            break
+        number /= 1024.0
+        humanrnum = "%.1f %s" % (number, 'Yi')
+    return humanrnum;
+
 # Get human readable memory info
 def meminfo ():
     meminfo=OrderedDict()
     with open('/proc/meminfo') as f:
         for line in f:
             meminfo[line.split(':')[0]] = line.split(':')[1].strip()
-    num = int (meminfo [ 'MemTotal' ].split(' ')[0].strip())
-    for unit in ['KB','MB','GB','TB','PB','EB','ZB']:
-        if abs(num) < 1024.0:
-            memhr = "%3.1f %s" % (num, unit)
-	    break
-        num /= 1024.0
-        humanread = "%.1f %s" % (num, 'Yi')
-    row('MEM',memhr)
-    
+    memt = int (meminfo [ 'MemTotal' ].split(' ')[0].strip())
+    swpt = int (meminfo [ 'SwapTotal' ].split(' ')[0].strip())
+    memth = humanize (memt)
+    swpth = humanize (swpt)
+    row('MEM',memth)
+    row('SWAP',swpth)
 
-# (DRAFT) Get CPU Information
+
+# Get CPU Information
 def cpuinfo ():
         cpucore = []; oscpucore = [] 
         f = open( "/proc/cpuinfo" );
