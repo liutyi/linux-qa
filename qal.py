@@ -138,7 +138,7 @@ def meminfo ():
     f.close()
     memt = int (meminfo [ 'MemTotal' ].split(' ')[0].strip())
     swpt = int (meminfo [ 'SwapTotal' ].split(' ')[0].strip())
-    swpt = psutil.swap_memory().total
+#    swpt = psutil.swap_memory().total
 #    memt = psutil.virtual_memory().total
     memth = humanize (memt)
     swpth = humanize (swpt)
