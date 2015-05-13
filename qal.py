@@ -2,6 +2,7 @@
 from argparse import ArgumentParser
 from socket import gethostname;
 from collections import OrderedDict
+import psutil
 import platform
 import time
 import os
@@ -110,8 +111,17 @@ def countuptime():
     return string;
 
 # Memory, Swap, Disk sizes in human readable formats
-def humanize (number):
+def humanizeKB (number):
     for unit in ['KB','MB','GB','TB','PB','EB','ZB']:
+        if abs(number) < 1024.0:
+            humanrnum = "%3.1f %s" % (number, unit)
+            break
+        number /= 1024.0
+        humanrnum = "%.1f %s" % (number, 'Yi')
+    return humanrnum;
+
+def humanize (number):
+    for unit in ['B','KB','MB','GB','TB','PB','EB','ZB']:
         if abs(number) < 1024.0:
             humanrnum = "%3.1f %s" % (number, unit)
             break
@@ -121,14 +131,18 @@ def humanize (number):
 
 # Get human readable memory info
 def meminfo ():
-    meminfo=OrderedDict()
-    with open('/proc/meminfo') as f:
-        for line in f:
-            meminfo[line.split(':')[0]] = line.split(':')[1].strip()
-    memt = int (meminfo [ 'MemTotal' ].split(' ')[0].strip())
-    swpt = int (meminfo [ 'SwapTotal' ].split(' ')[0].strip())
+#    meminfo=OrderedDict()
+#    with open('/proc/meminfo') as f:
+#        for line in f:
+#            meminfo[line.split(':')[0]] = line.split(':')[1].strip()
+#    f.close()
+#    memt = int (meminfo [ 'MemTotal' ].split(' ')[0].strip())
+#    swpt = int (meminfo [ 'SwapTotal' ].split(' ')[0].strip())
+    swpt = psutil.swap_memory().total
+    memt = psutil.virtual_memory().total
     memth = humanize (memt)
     swpth = humanize (swpt)
+
     row('MEM',memth)
     row('SWAP',swpth)
 
