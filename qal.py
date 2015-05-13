@@ -11,8 +11,8 @@ import os
 def Options ():
    scriptName = 'LQApy Script'
    scriptVer  = '0.1'
-   scriptBuild = '011'
-   scriptDate  = '2015-05-01'
+   scriptBuild = '012'
+   scriptDate  = '2015-05-14'
    developedBy = 'Oleksandr Liutyi'
    scriptDesc  = 'Linux Server QA Script'
    global version; version = scriptName+" "+scriptVer+"-"+scriptBuild+" ("+scriptDate+")"
