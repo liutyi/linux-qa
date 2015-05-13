@@ -120,7 +120,7 @@ def humanizeKB (number):
         humanrnum = "%.1f %s" % (number, 'Yi')
     return humanrnum;
 
-def humanize (number):
+def humanizeB (number):
     for unit in ['B','KB','MB','GB','TB','PB','EB','ZB']:
         if abs(number) < 1024.0:
             humanrnum = "%3.1f %s" % (number, unit)
@@ -140,8 +140,8 @@ def meminfo ():
     swpt = int (meminfo [ 'SwapTotal' ].split(' ')[0].strip())
 #    swpt = psutil.swap_memory().total
 #    memt = psutil.virtual_memory().total
-    memth = humanize (memt)
-    swpth = humanize (swpt)
+    memth = humanizeKB (memt)
+    swpth = humanizeKB (swpt)
 
     row('MEM',memth)
     row('SWAP',swpth)
