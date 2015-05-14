@@ -185,6 +185,26 @@ def dmidecode():
     row('BIOS',bios)
     row('SERIAL',serial)
 
+# Get disks sizes
+def disk():
+    devicesall = os.listdir('/sys/block/')
+    disks = []; disksize =  0
+    for dev in devicesall:
+        if dev.startswith('md') or dev.startswith('sd') or dev.startswith('hd'):
+               disks.append(dev)
+    disks = sorted(disks)
+    if len (disks) < 3:
+       for dev in disks:
+               dev_size = open('/sys/block/%s/size' % dev).readline().strip()
+	       info = dev + " " + humanizeKB (int(dev_size))
+               row ('DISK', info)
+    else:
+       for dev in disks:
+               dev_size = dev_size + open('/sys/block/%s/size' % dev).readline().strip()
+       info = str(len (disks)) + "disks" + humanizeKB(int(dev_size)) + "in totla"
+       row ('DISKS', info)
+
+
 # MAIN part of the script
 def main():
    args =  Options ()
@@ -215,6 +235,8 @@ def main():
            dmidecode()
            cpuinfo()
            meminfo()
+           disk()
+
 
 
 
