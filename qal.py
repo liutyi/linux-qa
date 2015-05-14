@@ -190,7 +190,7 @@ def disk():
     devicesall = os.listdir('/sys/block/')
     disks = []; disksize =  0
     for dev in devicesall:
-        if dev.startswith('md') or dev.startswith('sd') or dev.startswith('hd'):
+        if dev.startswith('md') or dev.startswith('sd') or dev.startswith('hd') or dev.startswith('xvd'):
                disks.append(dev)
     disks = sorted(disks)
     if len (disks) < 3:
