@@ -1,4 +1,8 @@
 #!/usr/bin/env python
+#
+# License: GPLv3
+# http://www.gnu.org/licenses/gpl.html
+#
 from argparse import ArgumentParser
 from socket import gethostname;
 from collections import OrderedDict
@@ -236,6 +240,52 @@ def main():
            cpuinfo()
            meminfo()
            disk()
+# HEALTH
+#
+# Memory usage
+# Load Avg per core
+# root FS disk usage
+# root FS inodes usage check
+# ipc resources availability
+# pids availability
+#
+# PERFORMANCE
+#
+# count disk IOPS and transfer rate in MB/s
+# count available MIPS in some way
+#
+# VIRTUAL
+#
+# Vmware addition and other type of guest services check
+#
+# NETWORK
+#
+# IP addresses
+# Routings/Gateways
+#  
+#
+# NETWORK SERVICES
+#
+# SMTP status check
+# NTP status check
+# DNS setup check
+#
+# AGENTS
+#
+# Zabbix agent status and version
+# Nagios agent status and version
+# ..
+#
+# SECURITY
+#
+# ssh password access for root
+# Qemu/Xen VENOM
+# Bash ShellShock
+# SSL HeartBleed
+#
+# 
+#
+
 
 
 
