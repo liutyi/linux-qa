@@ -13,7 +13,7 @@ import os
 
 # Parse command line options
 def Options ():
-   scriptName = 'LQApy Script'
+   scriptName = 'test'
    scriptVer  = '0.1'
    scriptBuild = '012'
    scriptDate  = '2015-05-14'
