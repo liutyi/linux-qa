@@ -202,7 +202,7 @@ def disk():
                blocks = open('/sys/block/%s/size' % dev).readline().strip()
                block_size = open('/sys/block/%s/queue/logical_block_size' % dev).readline().strip()
                dev_size = int (blocks) * int (block_size)
-              info = dev + " " + humanizeB (dev_size)
+               info = dev + " " + humanizeB (dev_size)
                row ('DISK', info)
     else:
        for dev in disks:
