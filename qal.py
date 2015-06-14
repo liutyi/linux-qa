@@ -192,21 +192,27 @@ def dmidecode():
 # Get disks sizes
 def disk():
     devicesall = os.listdir('/sys/block/')
-    disks = []; disksize =  0
+    disks = []; blocks = 0; dev_size =  0; block_size = 1024
     for dev in devicesall:
         if dev.startswith('md') or dev.startswith('sd') or dev.startswith('hd') or dev.startswith('xvd') or dev.startswith('vd'):
                disks.append(dev)
     disks = sorted(disks)
     if len (disks) < 3:
        for dev in disks:
-               dev_size = open('/sys/block/%s/size' % dev).readline().strip()
-	       info = dev + " " + humanizeKB (int(dev_size))
+               blocks = open('/sys/block/%s/size' % dev).readline().strip()
+               block_size = open('/sys/block/%s/queue/logical_block_size' % dev).readline().strip()
+               dev_size = int (blocks) * int (block_size)
+              info = dev + " " + humanizeB (dev_size)
                row ('DISK', info)
     else:
        for dev in disks:
-               dev_size = dev_size + open('/sys/block/%s/size' % dev).readline().strip()
-       info = str(len (disks)) + "disks" + humanizeKB(int(dev_size)) + "in totla"
+               blocks = open('/sys/block/%s/size' % dev).readline().strip()
+               block_size = open('/sys/block/%s/queue/logical_block_size' % dev).readline().strip()
+               newdev_size = int (blocks) * int (block_size)
+               dev_size += newdev_size
+       info = str(len (disks)) + " disks " + humanizeB(dev_size) + " in totla"
        row ('DISKS', info)
+
 
 
 # MAIN part of the script
