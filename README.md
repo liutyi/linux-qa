@@ -17,6 +17,12 @@ DEPENDENCIES:
 
 yum install python-argparse
 
+TESTED ON:
+
+Centos 7
+Ubuntu 14.04
+
+
 USAGE:
 
 root@wordpress-0yvs:~# linux-qa/qal.py
