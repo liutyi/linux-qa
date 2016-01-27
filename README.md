@@ -25,20 +25,26 @@ Ubuntu 14.04
 
 USAGE:
 
-root@wordpress-0yvs:~# linux-qa/qal.py
+root@testmachine:~# linux-qa/qal.py
 ```    
 =============================================================
-              LQApy Script 0.1-010 (2015-04-13)
+LQApy Script 0.1-013 (2015-06-14)
 =============================================================
-NAME:   wordpress-0yvs
-DATE:   2015-04-24 22:16 (EEST)
-UPTIME: 7 days (0.0, 0.01, 0.05)
-OS:     debian 7.8
-KERNEL: Linux-3.2.0-4-amd64-x86_64-with-debian-7.8
+NAME:   testmachine
+DATE:   2016-01-27 12:51 (EET)
+UPTIME: 4 days (0.0, 0.01, 0.05)
+OS:     CentOS Linux 7.1.1503 Core
+KERNEL: Linux-3.10.0-229.20.1.el7.x86_64-x86_64-with-centos-7.1.1503-Core
 ==========[HARDWARE]=========================================
-SERVER: Google Google
-BIOS:   Google Google (01/01/2011)
-SERIAL: GoogleCloud-78402E1B290C15E9106CA7DE44591E72
+SERVER: Dell Inc. OptiPlex 3010
+BIOS:   Dell Inc. A05 (09/18/2012)
+SERIAL: 8QBYG5J
+CPU:    4(1)xIntel(R) Core(TM) i5-3470 CPU @ 3.20GHz
+MEM:    15.4 GB
+SWAP:   16.0 GB
+DISK:   sda 931.5 GB
+DISK:   sdb 167.7 GB
+
 ```
     
 
