@@ -83,7 +83,7 @@ def error(msg):
 # Print section title
 def title(msg):
     longtitle="========["+msg+"]============================================================"
-    shorttitle=longtitle[0:61]
+    shorttitle=longtitle[0:70]
     print TITLE + shorttitle
 
 # Add row with row TITLE: + information
@@ -239,7 +239,7 @@ def main():
    if ( len(sections) == 0 ):
      sections = ['header', 'hw', 'load', 'net' , 'netsrv', 'security', 'agents']
    print TITLE + "======================================================================" + DEFAULT
-   print('{:^61}'.format(version))
+   print('{:^70}'.format(version))
    print TITLE + "======================================================================" + DEFAULT
    for i in range(len(sections)):
 # HEADER
