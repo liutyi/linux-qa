@@ -217,7 +217,7 @@ def netcards():
     devicesall = os.listdir('/sys/class/net')
     netcards = [];
     for dev in devicesall:
-        if dev.startswith('eno') or dev.startswith('enp') or dev.startswith('eth'):
+        if dev.startswith('eno') or dev.startswith('enp') or dev.startswith('em') or dev.startswith('eth'):
                netcards.append(dev)
     netcards = sorted(netcards)
     for dev in netcards:
