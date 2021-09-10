@@ -13,28 +13,28 @@ import os
 
 # Parse command line options
 def Options ():
-   scriptName = 'LQApy Script'
+   scriptName = 'qal.py'
    scriptVer  = '0.1'
-   scriptBuild = '013'
-   scriptDate  = '2015-06-14'
+   scriptBuild = '014'
+   scriptDate  = '2021-09-10'
    developedBy = 'Oleksandr Liutyi'
-   scriptDesc  = 'Linux Server QA Script'
+   scriptDesc  = 'Linux Server Brief Status Script'
    global version; version = scriptName+" "+scriptVer+"-"+scriptBuild+" ("+scriptDate+")"
    parser = ArgumentParser(description=scriptDesc)
    parser.add_argument("-V", "--version",\
-			 action='version', version=version)
+                         action='version', version=version)
    parser.add_argument("-q", "--quick",\
-			 action="store_true",\
-			 help="do not ubdate locate db")
+                         action="store_true",\
+                         help="do not ubdate locate db")
    parser.add_argument("-w", "--write",\
-			 action="store_true",\
-			 help="write errors to syslog")
+                         action="store_true",\
+                         help="write errors to syslog")
    parser.add_argument('-s', '--scheme',\
-			 action='store', dest='color', choices=['calm', 'inverse', 'default', 'text'],\
-			 default='default',\
-			 help="Color scheme selection\r\nblack, white, text ")
+                         action='store', dest='color', choices=['calm', 'inverse', 'default', 'text'],\
+                         default='default',\
+                         help="Color scheme selection\r\nblack, white, text ")
    parser.add_argument("section",nargs='*',\
-			 help="optional section(s) name(s) for example: header, hw, net, netsrv, security, agents")
+                         help="optional section(s) name(s) for example: header, hw, net, netsrv, security, agents")
    args = parser.parse_args()
    return args
 
@@ -56,13 +56,13 @@ def ColorScheme (scheme):
    # Assign color
    global TITLE; global NEUTRAL; global CRITICAL; global WARNING; global GOOD; global TIPS; global DEFAULT
    if ( scheme == 'calm' ):
-	TITLE=FDEF; NEUTRAL=FWHITE; CRITICAL=FRED; WARNING=FBROWN; GOOD=FGREEN; TIPS=FLCYAN; DEFAULT=FDEF
+        TITLE=FDEF; NEUTRAL=FWHITE; CRITICAL=FRED; WARNING=FBROWN; GOOD=FGREEN; TIPS=FLCYAN; DEFAULT=FDEF
    if ( scheme == "inverse" ):
-	TITLE=FBLACK; NEUTRAL=FDEF; CRITICAL=FRED; WARNING=FBROWN; GOOD=FGREEN; TIPS=FLCYAN; DEFAULT=FDEF
+        TITLE=FBLACK; NEUTRAL=FDEF; CRITICAL=FRED; WARNING=FBROWN; GOOD=FGREEN; TIPS=FLCYAN; DEFAULT=FDEF
    if ( scheme == "default" ):
-	TITLE=FWHITE; NEUTRAL=FDEF; CRITICAL=FRED; WARNING=FBROWN; GOOD=FGREEN; TIPS=FLCYAN; DEFAULT=FDEF
+        TITLE=FWHITE; NEUTRAL=FDEF; CRITICAL=FRED; WARNING=FBROWN; GOOD=FGREEN; TIPS=FLCYAN; DEFAULT=FDEF
    if ( scheme == "text" ):
-	TITLE=""; NEUTRAL=""; CRITICAL=""; WARNING=""; GOOD=""; TIPS=""; DEFAULT=""
+        TITLE=""; NEUTRAL=""; CRITICAL=""; WARNING=""; GOOD=""; TIPS=""; DEFAULT=""
 
 # Print in neutral colors
 def list (msg):
@@ -111,7 +111,7 @@ def countuptime():
     else:
          string += str(hours).zfill(2) + ":"
          string += str(minutes).zfill(2)
- 
+
     return string;
 
 # Memory, Swap, Disk sizes in human readable formats
@@ -153,23 +153,23 @@ def meminfo ():
 
 # Get CPU Information
 def cpuinfo ():
-        cpucore = []; oscpucore = [] 
+        cpucore = []; oscpucore = []
         f = open( "/proc/cpuinfo" );
         for line in f:
             if line.strip():
                if line.rstrip('\n').startswith('model name'):
                   model_name = line.rstrip('\n').split(':')[1].strip()
-	       if line.rstrip('\n').startswith('physical id'):
+               if line.rstrip('\n').startswith('physical id'):
                   coreid = line.rstrip('\n').split(':')[1].strip()
-		  if coreid not in cpucore:
+                  if coreid not in cpucore:
                      cpucore.append(coreid)
-	       if line.rstrip('\n').startswith('core id'):
+               if line.rstrip('\n').startswith('core id'):
                   coreid = line.rstrip('\n').split(':')[1].strip()
                   if coreid not in oscpucore:
                      oscpucore.append(coreid)
         f.close()
-	model_name = str (len(oscpucore)) + "(" + str (len(cpucore)) + ")" + "x" + model_name
-	row ("CPU", model_name)
+        model_name = str (len(oscpucore)) + "(" + str (len(cpucore)) + ")" + "x" + model_name
+        row ("CPU", model_name)
 
 # Get BIOS/HW information
 def dmidecode():
@@ -213,6 +213,22 @@ def disk():
        info = str(len (disks)) + " disks " + humanizeB(dev_size) + " in totla"
        row ('DISKS', info)
 
+def netcards():
+    devicesall = os.listdir('/sys/class/net')
+    netcards = [];
+    for dev in devicesall:
+        if dev.startswith('eno') or dev.startswith('eth'):
+               netcards.append(dev)
+    netcards = sorted(netcards)
+    for dev in netcards:
+            state = open('/sys/class/net/%s/operstate' % dev).readline().strip()
+            speed = open('/sys/class/net/%s/speed' % dev).readline().strip()
+            duplex = open('/sys/class/net/%s/duplex' % dev).readline().strip()
+            rx_bytes = int (open('/sys/class/net/%s/statistics/rx_bytes' % dev).readline().strip())
+            tx_bytes = int (open('/sys/class/net/%s/statistics/tx_bytes' % dev).readline().strip())
+            if ( state == 'up' ):
+                 info = dev + " " + speed + "/" + duplex + "(" + state  +  ")" + " TX: " + humanizeB (tx_bytes) + " RX: " + humanizeB (rx_bytes)
+                 row ('NET', info)
 
 
 # MAIN part of the script
@@ -228,17 +244,17 @@ def main():
    for i in range(len(sections)):
 # HEADER
         if ( sections[i] == 'header' ):
-	   hostname=gethostname()
-	   row('NAME', hostname)
-	   now=time.strftime("%Y-%m-%d %H:%M (%Z)")
-	   row('DATE',now)
+           hostname=gethostname()
+           row('NAME', hostname)
+           now=time.strftime("%Y-%m-%d %H:%M (%Z)")
+           row('DATE',now)
            loadavg=os.getloadavg()
            uptime=countuptime() + " " + str(os.getloadavg())
-	   row('UPTIME', uptime)
-	   platf=' '.join(platform.linux_distribution())
-	   row('OS', platf)
-	   kernelv=platform.platform()
-	   row('KERNEL',kernelv)
+           row('UPTIME', uptime)
+           platf=' '.join(platform.linux_distribution())
+           row('OS', platf)
+           kernelv=platform.platform()
+           row('KERNEL',kernelv)
 # HARDWARE
         if ( sections[i] == 'hw' ):
            title('HARDWARE')
@@ -246,6 +262,8 @@ def main():
            cpuinfo()
            meminfo()
            disk()
+           netcards()
+
 # HEALTH
 #
 # Memory usage
@@ -268,7 +286,7 @@ def main():
 #
 # IP addresses
 # Routings/Gateways
-#  
+#
 #
 # NETWORK SERVICES
 #
@@ -289,7 +307,7 @@ def main():
 # Bash ShellShock
 # SSL HeartBleed
 #
-# 
+#
 #
 
 
@@ -300,4 +318,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
