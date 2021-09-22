@@ -15,8 +15,8 @@ import os
 def Options ():
    scriptName = 'qal.py'
    scriptVer  = '0.1'
-   scriptBuild = '014'
-   scriptDate  = '2021-09-10'
+   scriptBuild = '015'
+   scriptDate  = '2021-09-22'
    developedBy = 'Oleksandr Liutyi'
    scriptDesc  = 'Linux Server Brief Status Script'
    global version; version = scriptName+" "+scriptVer+"-"+scriptBuild+" ("+scriptDate+")"
@@ -217,7 +217,7 @@ def netcards():
     devicesall = os.listdir('/sys/class/net')
     netcards = [];
     for dev in devicesall:
-        if dev.startswith('eno') or dev.startswith('enp') or dev.startswith('em') or dev.startswith('eth'):
+        if dev.startswith('eno') or dev.startswith('enp') or dev.startswith('em') or dev.startswith('eth') or dev.startswith('wan') or dev.startswith('pxe'):
                netcards.append(dev)
     netcards = sorted(netcards)
     for dev in netcards:
