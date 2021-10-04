@@ -15,8 +15,8 @@ import os
 def Options ():
    scriptName = 'qal.py'
    scriptVer  = '0.1'
-   scriptBuild = '015'
-   scriptDate  = '2021-09-22'
+   scriptBuild = '016'
+   scriptDate  = '2021-10-04'
    developedBy = 'Oleksandr Liutyi'
    scriptDesc  = 'Linux Server Brief Status Script'
    global version; version = scriptName+" "+scriptVer+"-"+scriptBuild+" ("+scriptDate+")"
@@ -194,7 +194,7 @@ def disk():
     devicesall = os.listdir('/sys/block/')
     disks = []; blocks = 0; dev_size =  0; block_size = 1024
     for dev in devicesall:
-        if dev.startswith('md') or dev.startswith('sd') or dev.startswith('hd') or dev.startswith('xvd') or dev.startswith('vd'):
+        if dev.startswith('md') or dev.startswith('sd') or dev.startswith('hd') or dev.startswith('xvd') or dev.startswith('vd') or dev.startswith('nvme'):
                disks.append(dev)
     disks = sorted(disks)
     if len (disks) < 3:
