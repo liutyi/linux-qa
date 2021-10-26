@@ -210,7 +210,7 @@ def disk():
                block_size = open('/sys/block/%s/queue/logical_block_size' % dev).readline().strip()
                newdev_size = int (blocks) * int (block_size)
                dev_size += newdev_size
-       info = str(len (disks)) + " disks " + humanizeB(dev_size) + " in totla"
+       info = str(len (disks)) + " disks " + humanizeB(dev_size) + " in total"
        row ('DISKS', info)
 
 def netcards():
