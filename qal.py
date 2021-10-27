@@ -8,6 +8,12 @@ from socket import gethostname;
 from collections import OrderedDict
 #import psutil
 import platform
+using_distro = False
+try:
+    import distro
+    using_distro = True
+except ImportError:
+    pass
 import time
 import os
 
@@ -251,7 +257,10 @@ def main():
            loadavg=os.getloadavg()
            uptime=countuptime() + " " + str(os.getloadavg())
            row('UPTIME', uptime)
-           platf=' '.join(platform.linux_distribution())
+           if using_distro:
+             platf=' '.join(distro.linux_distribution())
+           else:
+               platf=' '.join(platform.linux_distribution())
            row('OS', platf)
            kernelv=platform.platform()
            row('KERNEL',kernelv)
