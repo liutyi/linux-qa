@@ -21,8 +21,8 @@ import os
 def Options ():
    scriptName = 'qal.py'
    scriptVer  = '0.1'
-   scriptBuild = '016'
-   scriptDate  = '2021-10-04'
+   scriptBuild = '018'
+   scriptDate  = '2021-10-27'
    developedBy = 'Oleksandr Liutyi'
    scriptDesc  = 'Linux Server Brief Status Script'
    global version; version = scriptName+" "+scriptVer+"-"+scriptBuild+" ("+scriptDate+")"
@@ -195,25 +195,39 @@ def dmidecode():
     row('BIOS',bios)
     row('SERIAL',serial)
 
+def checkvz():
+    try:
+       f = open ( "/proc/vz/veinfo" ); ovzcontainer=f.read(); f.close()
+    except:
+       return "File not exist"
+    openvzinfo = str( ovzcontainer.rstrip('\n'))
+    row('OPENVZ', openvzinfo.lstrip())
+
 # Get disks sizes
 def disk():
     devicesall = os.listdir('/sys/block/')
     disks = []; blocks = 0; dev_size =  0; block_size = 1024
     for dev in devicesall:
-        if dev.startswith('md') or dev.startswith('sd') or dev.startswith('hd') or dev.startswith('xvd') or dev.startswith('vd') or dev.startswith('nvme'):
+        if dev.startswith('md') or dev.startswith('sd') or dev.startswith('hd') or dev.startswith('xvd') or dev.startswith('vd') or dev.startswith('nvme') or dev.startswith('ploop'):
                disks.append(dev)
     disks = sorted(disks)
     if len (disks) < 3:
        for dev in disks:
                blocks = open('/sys/block/%s/size' % dev).readline().strip()
-               block_size = open('/sys/block/%s/queue/logical_block_size' % dev).readline().strip()
+               try:
+                   block_size = open('/sys/block/%s/queue/logical_block_size' % dev).readline().strip()
+               except:
+                   block_size = 512
                dev_size = int (blocks) * int (block_size)
                info = dev + " " + humanizeB (dev_size)
                row ('DISK', info)
     else:
        for dev in disks:
                blocks = open('/sys/block/%s/size' % dev).readline().strip()
-               block_size = open('/sys/block/%s/queue/logical_block_size' % dev).readline().strip()
+               try:
+                   block_size = open('/sys/block/%s/queue/logical_block_size' % dev).readline().strip()
+               except:
+                   block_size = 512
                newdev_size = int (blocks) * int (block_size)
                dev_size += newdev_size
        info = str(len (disks)) + " disks " + humanizeB(dev_size) + " in total"
@@ -268,6 +282,7 @@ def main():
         if ( sections[i] == 'hw' ):
            title('HARDWARE')
            dmidecode()
+           checkvz()
            cpuinfo()
            meminfo()
            disk()
