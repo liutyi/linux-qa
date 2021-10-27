@@ -20,8 +20,8 @@ import os
 # Parse command line options
 def Options ():
    scriptName = 'qal.py'
-   scriptVer  = '0.1'
-   scriptBuild = '018'
+   scriptVer  = '0.2'
+   scriptBuild = '019'
    scriptDate  = '2021-10-27'
    developedBy = 'Oleksandr Liutyi'
    scriptDesc  = 'Linux Server Brief Status Script'
@@ -182,7 +182,6 @@ def dmidecode():
     try:
         f = open( "/sys/class/dmi/id/sys_vendor" ); vendor=f.read(); f.close()
         f = open( "/sys/class/dmi/id/product_name" ); product=f.read(); f.close()
-        f = open( "/sys/class/dmi/id/product_serial" ); serialn=f.read(); f.close()
         f = open( "/sys/class/dmi/id/bios_vendor" ); biosven=f.read(); f.close()
         f = open( "/sys/class/dmi/id/bios_version" ); biosver=f.read(); f.close()
         f = open( "/sys/class/dmi/id/bios_date" ); biosdate=f.read(); f.close()
@@ -190,9 +189,13 @@ def dmidecode():
         return "File not exist"
     server = str( vendor.rstrip('\n')) + " " + str(product.rstrip('\n'))
     bios   = str(biosven.rstrip('\n')) + " " + str(biosver.rstrip('\n')) + " (" + str(biosdate.rstrip('\n')) + ")"
-    serial = str(serialn.rstrip('\n'))
     row('SERVER',server)
     row('BIOS',bios)
+    try:
+        f = open( "/sys/class/dmi/id/product_serial" ); serialn=f.read(); f.close()
+    except:
+        return "File not exist"
+    serial = str(serialn.rstrip('\n'))
     row('SERIAL',serial)
 
 def checkvz():
