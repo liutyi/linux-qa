@@ -6,9 +6,13 @@ FEATURES:
 
 v 0.1: 
 
-OS Version, uptime, load average, kernel version
-Server Manufacturer, Type, Bios version and date, HW Serial
-disk and ethernet
+- OS Version, uptime, load average, kernel version
+- Server Manufacturer, Type, Bios version and date, HW Serial
+
+v 0.2: 
+- openVZ info
+- disk and ethernet
+- some python 3 compatibility
 
 TODO:
 
