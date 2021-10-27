@@ -8,15 +8,21 @@ from socket import gethostname;
 from collections import OrderedDict
 #import psutil
 import platform
+using_distro = False
+try:
+    import distro
+    using_distro = True
+except ImportError:
+    pass
 import time
 import os
 
 # Parse command line options
 def Options ():
    scriptName = 'qal.py'
-   scriptVer  = '0.1'
-   scriptBuild = '014'
-   scriptDate  = '2021-09-10'
+   scriptVer  = '0.2'
+   scriptBuild = '019'
+   scriptDate  = '2021-10-27'
    developedBy = 'Oleksandr Liutyi'
    scriptDesc  = 'Linux Server Brief Status Script'
    global version; version = scriptName+" "+scriptVer+"-"+scriptBuild+" ("+scriptDate+")"
@@ -66,30 +72,30 @@ def ColorScheme (scheme):
 
 # Print in neutral colors
 def list (msg):
-    print NEUTRAL + msg + DEFAULT
+    print ( NEUTRAL + msg + DEFAULT )
 
 # Print with POSITIVE colors
 def positive(msg):
-    print GOOD + msg + DEFAULT
+    print ( GOOD + msg + DEFAULT )
 
 # Print in WARNING colors
 def warning(msg):
-    print WARNING + msg + DEFAULT
+    print ( WARNING + msg + DEFAULT )
 
 # Print in ERROR colors
 def error(msg):
-    print CRITICAL + msg + DEFAULT
+    print ( CRITICAL + msg + DEFAULT )
 
 # Print section title
 def title(msg):
-    longtitle="==========["+msg+"]==================================================="
-    shorttitle=longtitle[0:61]
-    print TITLE + shorttitle
+    longtitle="========["+msg+"]============================================================"
+    shorttitle=longtitle[0:70]
+    print ( TITLE + shorttitle )
 
 # Add row with row TITLE: + information
 def row(msg,info):
     shortrow=msg[0:6]+':\t'
-    print TITLE + shortrow + DEFAULT + str(info)
+    print ( TITLE + shortrow + DEFAULT + str(info) )
 
 # Get human readable uptime
 def countuptime():
@@ -176,7 +182,6 @@ def dmidecode():
     try:
         f = open( "/sys/class/dmi/id/sys_vendor" ); vendor=f.read(); f.close()
         f = open( "/sys/class/dmi/id/product_name" ); product=f.read(); f.close()
-        f = open( "/sys/class/dmi/id/product_serial" ); serialn=f.read(); f.close()
         f = open( "/sys/class/dmi/id/bios_vendor" ); biosven=f.read(); f.close()
         f = open( "/sys/class/dmi/id/bios_version" ); biosver=f.read(); f.close()
         f = open( "/sys/class/dmi/id/bios_date" ); biosdate=f.read(); f.close()
@@ -184,46 +189,70 @@ def dmidecode():
         return "File not exist"
     server = str( vendor.rstrip('\n')) + " " + str(product.rstrip('\n'))
     bios   = str(biosven.rstrip('\n')) + " " + str(biosver.rstrip('\n')) + " (" + str(biosdate.rstrip('\n')) + ")"
-    serial = str(serialn.rstrip('\n'))
     row('SERVER',server)
     row('BIOS',bios)
+    try:
+        f = open( "/sys/class/dmi/id/product_serial" ); serialn=f.read(); f.close()
+    except:
+        return "File not exist"
+    serial = str(serialn.rstrip('\n'))
     row('SERIAL',serial)
+
+def checkvz():
+    try:
+       f = open ( "/proc/vz/veinfo" ); ovzcontainer=f.read(); f.close()
+    except:
+       return "File not exist"
+    openvzinfo = str( ovzcontainer.rstrip('\n'))
+    row('OPENVZ', openvzinfo.lstrip())
 
 # Get disks sizes
 def disk():
     devicesall = os.listdir('/sys/block/')
     disks = []; blocks = 0; dev_size =  0; block_size = 1024
     for dev in devicesall:
-        if dev.startswith('md') or dev.startswith('sd') or dev.startswith('hd') or dev.startswith('xvd') or dev.startswith('vd'):
+        if dev.startswith('md') or dev.startswith('sd') or dev.startswith('hd') or dev.startswith('xvd') or dev.startswith('vd') or dev.startswith('nvme') or dev.startswith('ploop'):
                disks.append(dev)
     disks = sorted(disks)
     if len (disks) < 3:
        for dev in disks:
                blocks = open('/sys/block/%s/size' % dev).readline().strip()
-               block_size = open('/sys/block/%s/queue/logical_block_size' % dev).readline().strip()
+               try:
+                   block_size = open('/sys/block/%s/queue/logical_block_size' % dev).readline().strip()
+               except:
+                   block_size = 512
                dev_size = int (blocks) * int (block_size)
                info = dev + " " + humanizeB (dev_size)
                row ('DISK', info)
     else:
        for dev in disks:
                blocks = open('/sys/block/%s/size' % dev).readline().strip()
-               block_size = open('/sys/block/%s/queue/logical_block_size' % dev).readline().strip()
+               try:
+                   block_size = open('/sys/block/%s/queue/logical_block_size' % dev).readline().strip()
+               except:
+                   block_size = 512
                newdev_size = int (blocks) * int (block_size)
                dev_size += newdev_size
-       info = str(len (disks)) + " disks " + humanizeB(dev_size) + " in totla"
+       info = str(len (disks)) + " disks " + humanizeB(dev_size) + " in total"
        row ('DISKS', info)
 
 def netcards():
     devicesall = os.listdir('/sys/class/net')
     netcards = [];
     for dev in devicesall:
-        if dev.startswith('eno') or dev.startswith('enp') or dev.startswith('eth'):
+        if dev.startswith('eno') or dev.startswith('enp') or dev.startswith('em') or dev.startswith('eth') or dev.startswith('wan') or dev.startswith('pxe'):
                netcards.append(dev)
     netcards = sorted(netcards)
     for dev in netcards:
             state = open('/sys/class/net/%s/operstate' % dev).readline().strip()
-            speed = open('/sys/class/net/%s/speed' % dev).readline().strip()
-            duplex = open('/sys/class/net/%s/duplex' % dev).readline().strip()
+            try:
+                speed = open('/sys/class/net/%s/speed' % dev).readline().strip()
+            except:
+                speed = "-"
+            try:
+                duplex = open('/sys/class/net/%s/duplex' % dev).readline().strip()
+            except:
+                duplex = "-"
             rx_bytes = int (open('/sys/class/net/%s/statistics/rx_bytes' % dev).readline().strip())
             tx_bytes = int (open('/sys/class/net/%s/statistics/tx_bytes' % dev).readline().strip())
             if ( state == 'up' ):
@@ -238,9 +267,9 @@ def main():
    sections=args.section
    if ( len(sections) == 0 ):
      sections = ['header', 'hw', 'load', 'net' , 'netsrv', 'security', 'agents']
-   print TITLE + "=============================================================" + DEFAULT
-   print('{:^61}'.format(version))
-   print TITLE + "=============================================================" + DEFAULT
+   print (TITLE + "======================================================================" + DEFAULT)
+   print ('{:^70}'.format(version))
+   print (TITLE + "======================================================================" + DEFAULT)
    for i in range(len(sections)):
 # HEADER
         if ( sections[i] == 'header' ):
@@ -251,7 +280,10 @@ def main():
            loadavg=os.getloadavg()
            uptime=countuptime() + " " + str(os.getloadavg())
            row('UPTIME', uptime)
-           platf=' '.join(platform.linux_distribution())
+           if using_distro:
+             platf=' '.join(distro.linux_distribution())
+           else:
+               platf=' '.join(platform.linux_distribution())
            row('OS', platf)
            kernelv=platform.platform()
            row('KERNEL',kernelv)
@@ -259,6 +291,7 @@ def main():
         if ( sections[i] == 'hw' ):
            title('HARDWARE')
            dmidecode()
+           checkvz()
            cpuinfo()
            meminfo()
            disk()

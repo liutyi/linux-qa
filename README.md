@@ -8,6 +8,7 @@ v 0.1:
 
 OS Version, uptime, load average, kernel version
 Server Manufacturer, Type, Bios version and date, HW Serial
+disk and ethernet
 
 TODO:
 
@@ -19,31 +20,37 @@ yum install python-argparse
 
 TESTED ON:
 
-Centos 7
-Ubuntu 14.04
+- Centos 7
+- Ubuntu 20.04 Python 2.7
+- Ubuntu 20.04 Python 3.8
 
 
 USAGE:
 
-root@testmachine:~# linux-qa/qal.py
+```
+curl https://raw.githubusercontent.com/oliut/linux-qa/master/qal.py 2>/dev/null |python
+```
+
 ```    
-=============================================================
-LQApy Script 0.1-013 (2015-06-14)
-=============================================================
-NAME:   testmachine
-DATE:   2016-01-27 12:51 (EET)
-UPTIME: 4 days (0.0, 0.01, 0.05)
-OS:     CentOS Linux 7.1.1503 Core
-KERNEL: Linux-3.10.0-229.20.1.el7.x86_64-x86_64-with-centos-7.1.1503-Core
-==========[HARDWARE]=========================================
-SERVER: Dell Inc. OptiPlex 3010
-BIOS:   Dell Inc. A05 (09/18/2012)
-SERIAL: 8QBYG5J
-CPU:    4(1)xIntel(R) Core(TM) i5-3470 CPU @ 3.20GHz
-MEM:    15.4 GB
-SWAP:   16.0 GB
-DISK:   sda 931.5 GB
-DISK:   sdb 167.7 GB
+root@oliut-vm:~# curl https://raw.githubusercontent.com/oliut/linux-qa/master/qal.py 2>/dev/null |python3
+======================================================================
+                     qal.py 0.1-016 (2021-10-04)
+======================================================================
+NAME:   oliut-vm
+DATE:   2021-10-27 12:42 (EEST)
+UPTIME: 10:33 (0.1, 0.03, 0.01)
+OS:     Ubuntu 20.04 focal
+KERNEL: Linux-5.11.0-38-generic-x86_64-with-glibc2.29
+========[HARDWARE]====================================================
+SERVER: innotek GmbH VirtualBox
+BIOS:   innotek GmbH VirtualBox (12/01/2006)
+SERIAL: 0
+CPU:    1(1)xIntel(R) Core(TM) i5-10210U CPU @ 1.60GHz
+MEM:    3.8 GB
+SWAP:   1.7 GB
+DISK:   sda 36.3 GB
+NET:    enp0s3 1000/full(up) TX: 54.8 MB RX: 78.7 MB
+
 
 ```
     
