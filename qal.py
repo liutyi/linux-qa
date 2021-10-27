@@ -66,30 +66,30 @@ def ColorScheme (scheme):
 
 # Print in neutral colors
 def list (msg):
-    print NEUTRAL + msg + DEFAULT
+    print ( NEUTRAL + msg + DEFAULT )
 
 # Print with POSITIVE colors
 def positive(msg):
-    print GOOD + msg + DEFAULT
+    print ( GOOD + msg + DEFAULT )
 
 # Print in WARNING colors
 def warning(msg):
-    print WARNING + msg + DEFAULT
+    print ( WARNING + msg + DEFAULT )
 
 # Print in ERROR colors
 def error(msg):
-    print CRITICAL + msg + DEFAULT
+    print ( CRITICAL + msg + DEFAULT )
 
 # Print section title
 def title(msg):
     longtitle="========["+msg+"]============================================================"
     shorttitle=longtitle[0:70]
-    print TITLE + shorttitle
+    print ( TITLE + shorttitle )
 
 # Add row with row TITLE: + information
 def row(msg,info):
     shortrow=msg[0:6]+':\t'
-    print TITLE + shortrow + DEFAULT + str(info)
+    print ( TITLE + shortrow + DEFAULT + str(info) )
 
 # Get human readable uptime
 def countuptime():
@@ -238,9 +238,9 @@ def main():
    sections=args.section
    if ( len(sections) == 0 ):
      sections = ['header', 'hw', 'load', 'net' , 'netsrv', 'security', 'agents']
-   print TITLE + "======================================================================" + DEFAULT
-   print('{:^70}'.format(version))
-   print TITLE + "======================================================================" + DEFAULT
+   print (TITLE + "======================================================================" + DEFAULT)
+   print ('{:^70}'.format(version))
+   print (TITLE + "======================================================================" + DEFAULT)
    for i in range(len(sections)):
 # HEADER
         if ( sections[i] == 'header' ):
