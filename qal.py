@@ -245,8 +245,14 @@ def netcards():
     netcards = sorted(netcards)
     for dev in netcards:
             state = open('/sys/class/net/%s/operstate' % dev).readline().strip()
-            speed = open('/sys/class/net/%s/speed' % dev).readline().strip()
-            duplex = open('/sys/class/net/%s/duplex' % dev).readline().strip()
+            try:
+                speed = open('/sys/class/net/%s/speed' % dev).readline().strip()
+            except:
+                speed = "-"
+            try:
+                duplex = open('/sys/class/net/%s/duplex' % dev).readline().strip()
+            except:
+                duplex = "-"
             rx_bytes = int (open('/sys/class/net/%s/statistics/rx_bytes' % dev).readline().strip())
             tx_bytes = int (open('/sys/class/net/%s/statistics/tx_bytes' % dev).readline().strip())
             if ( state == 'up' ):
