@@ -21,6 +21,7 @@ yum install python-argparse
 TESTED ON:
 
 - Centos 7
+- Ubuntu 18.04
 - Ubuntu 20.04 Python 2.7
 - Ubuntu 20.04 Python 3.8
 
@@ -28,30 +29,27 @@ TESTED ON:
 USAGE:
 
 ```
-curl https://raw.githubusercontent.com/oliut/linux-qa/master/qal.py 2>/dev/null |python
+curl https://raw.githubusercontent.com/liutyi/linux-qa/master/qal.py 2>/dev/null |python
 ```
 
 ```    
-root@oliut-vm:~# curl https://raw.githubusercontent.com/oliut/linux-qa/master/qal.py 2>/dev/null |python3
 ======================================================================
-                     qal.py 0.1-016 (2021-10-04)
+                     qal.py 0.2-019 (2021-10-27)
 ======================================================================
-NAME:   oliut-vm
-DATE:   2021-10-27 12:42 (EEST)
-UPTIME: 10:33 (0.1, 0.03, 0.01)
-OS:     Ubuntu 20.04 focal
-KERNEL: Linux-5.11.0-38-generic-x86_64-with-glibc2.29
+NAME:   server1
+DATE:   2021-10-28 11:44 (UTC)
+UPTIME: 152 days (0.85, 0.66, 0.42)
+OS:     Ubuntu 18.04 bionic
+KERNEL: Linux-4.15.0-143-generic-x86_64-with-Ubuntu-18.04-bionic
 ========[HARDWARE]====================================================
-SERVER: innotek GmbH VirtualBox
-BIOS:   innotek GmbH VirtualBox (12/01/2006)
-SERIAL: 0
-CPU:    1(1)xIntel(R) Core(TM) i5-10210U CPU @ 1.60GHz
-MEM:    3.8 GB
-SWAP:   1.7 GB
-DISK:   sda 36.3 GB
-NET:    enp0s3 1000/full(up) TX: 54.8 MB RX: 78.7 MB
-
-
+SERVER: GIGABYTE GB-BXi7-5500
+BIOS:   American Megatrends Inc. F2 (12/05/2014)
+SERIAL: To be filled by O.E.M.
+CPU:    2(1)xIntel(R) Core(TM) i7-5500U CPU @ 2.40GHz
+MEM:    15.5 GB
+SWAP:   4.0 GB
+DISK:   sda 931.5 GB
+NET:    enp3s0 1000/full(up) TX: 3.0 GB RX: 22.8 GB
 ```
     
 
