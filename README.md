@@ -41,11 +41,11 @@ TESTED ON:
 USAGE:
 
 ```
-curl https://raw.githubusercontent.com/oliut/linux-qa/master/qal.py 2>/dev/null |python
+curl https://raw.githubusercontent.com/liutyi/linux-qa/master/qal.py 2>/dev/null |python
 ```
 or 
 ```
-curl https://raw.githubusercontent.com/oliut/linux-qa/master/qal.py 2>/dev/null |python3
+curl https://raw.githubusercontent.com/liutyi/linux-qa/master/qal.py 2>/dev/null |python3
 ```
 
 ```    
@@ -68,7 +68,6 @@ DISK:   nvme0n1 1.8 TB
 NET:    eno1 1000/full(up) TX: 2.9 GB RX: 557.9 MB
 
 ```
-
 ```
 ======================================================================
                      qal.py 0.2-020 (2022-06-15)
