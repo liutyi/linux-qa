@@ -159,7 +159,7 @@ def meminfo ():
 
 # Get CPU Information
 def cpuinfo ():
-        cpucore = []; oscpucore = []
+        cpucore = []; oscpucore = []; cputhread = [];
         f = open( "/proc/cpuinfo" );
         for line in f:
             if line.strip():
@@ -173,8 +173,12 @@ def cpuinfo ():
                   coreid = line.rstrip('\n').split(':')[1].strip()
                   if coreid not in oscpucore:
                      oscpucore.append(coreid)
+               if line.rstrip('\n').startswith('processor'):
+                  coreid = line.rstrip('\n').split(':')[1].strip()
+                  if coreid not in cputhread:
+                     cputhread.append(cputhread)
         f.close()
-        model_name = str (len(oscpucore)) + "(" + str (len(cpucore)) + ")" + "x" + model_name
+        model_name = str (len(cpucore)) + "x" + model_name + " [ " + "C:" + str (len(oscpucore)) + " / " + "T:" +str (len(cputhread)) + " ]"
         row ("CPU", model_name)
 
 # Get BIOS/HW information
