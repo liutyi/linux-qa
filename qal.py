@@ -21,8 +21,8 @@ import os
 def Options ():
    scriptName = 'qal.py'
    scriptVer  = '0.2'
-   scriptBuild = '019'
-   scriptDate  = '2021-10-27'
+   scriptBuild = '020'
+   scriptDate  = '2022-06-15'
    developedBy = 'Oleksandr Liutyi'
    scriptDesc  = 'Linux Server Brief Status Script'
    global version; version = scriptName+" "+scriptVer+"-"+scriptBuild+" ("+scriptDate+")"
@@ -159,7 +159,7 @@ def meminfo ():
 
 # Get CPU Information
 def cpuinfo ():
-        cpucore = []; oscpucore = []
+        cpucore = []; oscpucore = []; cputhread = [];
         f = open( "/proc/cpuinfo" );
         for line in f:
             if line.strip():
@@ -173,8 +173,12 @@ def cpuinfo ():
                   coreid = line.rstrip('\n').split(':')[1].strip()
                   if coreid not in oscpucore:
                      oscpucore.append(coreid)
+               if line.rstrip('\n').startswith('processor'):
+                  coreid = line.rstrip('\n').split(':')[1].strip()
+                  if coreid not in cputhread:
+                     cputhread.append(cputhread)
         f.close()
-        model_name = str (len(oscpucore)) + "(" + str (len(cpucore)) + ")" + "x" + model_name
+        model_name = str (len(cpucore)) + "x" + model_name + " [ " + "C:" + str (len(oscpucore)) + " / " + "T:" +str (len(cputhread)) + " ]"
         row ("CPU", model_name)
 
 # Get BIOS/HW information
@@ -281,7 +285,7 @@ def main():
            uptime=countuptime() + " " + str(os.getloadavg())
            row('UPTIME', uptime)
            if using_distro:
-             platf=' '.join(distro.linux_distribution())
+             platf=distro.name() + " " + distro.version() + " " + distro.codename()
            else:
                platf=' '.join(platform.linux_distribution())
            row('OS', platf)
