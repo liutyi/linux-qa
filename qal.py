@@ -21,8 +21,8 @@ import os
 def Options ():
    scriptName = 'qal.py'
    scriptVer  = '0.2'
-   scriptBuild = '019'
-   scriptDate  = '2021-10-27'
+   scriptBuild = '020'
+   scriptDate  = '2022-06-15'
    developedBy = 'Oleksandr Liutyi'
    scriptDesc  = 'Linux Server Brief Status Script'
    global version; version = scriptName+" "+scriptVer+"-"+scriptBuild+" ("+scriptDate+")"
@@ -281,7 +281,7 @@ def main():
            uptime=countuptime() + " " + str(os.getloadavg())
            row('UPTIME', uptime)
            if using_distro:
-             platf=' '.join(distro.linux_distribution())
+             platf=distro.name() + " " + distro.version() + " " + distro.codename()
            else:
                platf=' '.join(platform.linux_distribution())
            row('OS', platf)
