@@ -28,7 +28,8 @@ TESTED ON:
 - Centos 6 Python 3.4
 - Centos 7 Python 2.7
 - Centos 7 Python 3.6
-- AlmaLinux 8.6 Python 3.6
+- Alma 8 Python 3.6
+- Alma 9 Python 3.9
 - Ubuntu 16.04 Python 2.7
 - Ubuntu 16.04 Python 3.5
 - Ubuntu 18.04 Python 2.7
@@ -36,6 +37,8 @@ TESTED ON:
 - Ubuntu 20.04 Python 2.7
 - Ubuntu 20.04 Python 3.8
 - Ubuntu 22.04 Python 3.10
+- Ubuntu 24.04 Python 3.12
+- Ubuntu 26.04 Python 3.14
 
 
 USAGE:
@@ -72,20 +75,19 @@ NET:    eno1 1000/full(up) TX: 2.9 GB RX: 557.9 MB
 ======================================================================
                      qal.py 0.2-020 (2022-06-15)
 ======================================================================
-NAME:   server22
-DATE:   2022-06-15 15:52 (IDT)
-UPTIME: 1937 days (0.1, 0.61, 0.87)
-OS:     CentOS 6.10 Final
-KERNEL: Linux-2.6.32-431.29.2.el6.x86_64-x86_64-with-centos-6.10-Final
+NAME:   server5
+DATE:   2026-07-14 16:59 (EEST)
+UPTIME: 9 days (0.0, 0.0, 0.0)
+OS:     Ubuntu 26.04 resolute
+KERNEL: Linux-7.0.0-27-generic-x86_64-with-glibc2.43
 ========[HARDWARE]====================================================
-SERVER: Supermicro X9SCL/X9SCM
-BIOS:   American Megatrends Inc. 2.0b (09/17/2012)
-SERIAL: 0123456789
-CPU:    1xIntel(R) Xeon(R) CPU E3-1230 V2 @ 3.30GHz [ C:4 / T:4 ]
-MEM:    31.3 GB
-SWAP:   16.0 GB
-DISKS:  3 disks 2.2 TB in total
-NET:    eth0 1000/full(up) TX: 1.0 PB RX: 660.4 TB
-NET:    eth1 1000/full(up) TX: 81.4 TB RX: 127.5 TB
+SERVER: GMKtec NucBoxG9
+BIOS:   American Megatrends International, LLC. 5.27 (01/14/2025)
+SERIAL: Default string
+CPU:    1xIntel(R) N150 [ C:4 / T:4 ]
+MEM:    10.9 GB
+SWAP:   6.0 GB
+DISKS:  4 disks 14.6 TB in total
+NET:    enp6s0 2500/full(up) TX: 490.0 MB RX: 9.7 GB
 ```
 
